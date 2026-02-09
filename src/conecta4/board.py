@@ -140,7 +140,7 @@ class Board:
     def _has_ascending_victory(self, player_char:str, matrix: MatrixColumn) -> bool:
 
         reversed_matrix = list(reversed(matrix))
-        displaced = displace_lol(reversed_matrix, None, 7)
+        displaced = displace_lol(reversed_matrix, None)
         return self._has_horizontal_victory(player_char, displaced)
         
     

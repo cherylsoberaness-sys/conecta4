@@ -98,8 +98,11 @@ def displace_list(elements: list, distance: int, total_size: int, filler)->list:
 #print(displace_list([1,2,3], 4, 7, None))
 
 
-def displace_lol(lol, filler, extended_size):
+def displace_lol(lol, filler):
   displaced = []
+  base_size = len(lol[0])
+  extended_size = base_size + len(lol) - 1
+  
   for i, sublist in enumerate(lol):
 
       displaced.append(displace_list(sublist, i, extended_size, filler))
