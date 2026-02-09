@@ -68,7 +68,7 @@ class HumanPlayer(Player):
         """
         while True:
             #pedimos columna al humano
-            raw = input("Select a column, punny human: ")
+            raw = int(input("Select a column, punny human: "))
             #verificamos que su respuesta no sea una idiotez
             if _is_int(raw) and _is_within_column_range(board, int(raw)) and _is_non_full_column(board, int(raw)):
                 #si no lo es, jugamos donde ha dicho y salimos del bucle
@@ -89,7 +89,7 @@ def _is_non_full_column(game_board: Board, col_idx: int):
 def _is_int(col: str):
     
     try:
-        int(col.strip())
+        int(col)
         return True
     except ValueError:
         return False

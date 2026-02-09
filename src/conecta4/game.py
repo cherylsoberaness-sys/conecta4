@@ -61,7 +61,11 @@ class Game:
         pass
    
    def display_result(self):
-       pass
+       winner = self.match.get_winner(self.board)
+       if winner is not None:
+           print(f'\n{winner.name} ({winner.char}) wins!!!')
+       else:
+           print(f'\nA tie between {self.match.get_player("x").name} ("x") and {self.match.get_player("o").name} ("o")')
    
    def _is_game_over(self):
        """

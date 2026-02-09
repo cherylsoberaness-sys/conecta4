@@ -64,7 +64,7 @@ class Board:
             board += '\n'
         return board
     
-    def is_full(self) -> bool:
+    def is_full(self) -> bool: 
         """
         True si todas las columnas están llenas
         """
