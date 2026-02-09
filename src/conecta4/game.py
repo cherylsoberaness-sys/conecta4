@@ -54,8 +54,8 @@ class Game:
             # salgo del bucle
             break
        
-   def display_move(self, player):
-        pass
+   def display_move(self, player: Player):
+        print(f'\n {player.name} {player.char} has moved in column {player.last_move}')
    
    def display_board(self):
         pass
