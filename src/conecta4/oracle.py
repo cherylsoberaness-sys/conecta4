@@ -106,9 +106,9 @@ class SmartOracle(BaseOracle):
             #se puede mejorar:
             # creo un tablero temporal a partir de board
             # juego en index
-            dummy_board = self._play_on_temp_board(board, index, player)
+            simulated_board = self._play_on_temp_board(board, index, player)
             #le pregunto al teblaero temporal si is_victory(player)
-            if dummy_board.is_victory(player):
+            if simulated_board.is_victory(player):
             # si es asi, reclasifico a WIN
                 recommendation = ColumnRecommendation(index, ColumnClassification.WIN)
                 
