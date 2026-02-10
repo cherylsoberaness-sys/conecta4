@@ -3,6 +3,8 @@ from enum import Enum, auto
 from conecta4.match import Match
 from conecta4.player import Player, HumanPlayer
 from conecta4.board import Board
+from beautifultable import BeautifulTable
+from conecta4.settings import BOARD_COLUMNS
 
 class RoundType(Enum):
     COMPUTER_VS_COMPUTER = auto()
@@ -58,8 +60,17 @@ class Game:
         print(f'\n {player.name} {player.char} has moved in column {player.last_move}')
    
    def display_board(self):
-        print(self.board._columns.__str__)
-   
+        """
+        Imprimir el tablero en su estado actual
+        """
+        #usar tus metodos en lugar de los del profe
+        matrix = self.board._display_matrix()
+        bt = BeautifulTable()
+        for row in matrix:
+            bt.rows.append(row)
+        bt.columns.header = [str(i) for i in range(BOARD_COLUMNS)]
+        print(bt)
+       
    def display_result(self):
        winner = self.match.get_winner(self.board)
        if winner is not None:

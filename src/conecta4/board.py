@@ -52,7 +52,7 @@ class Board:
     
     
     def __str__(self):
-      
+        """
         board = ''
         trans = reversed(transpose_matrix(self._columns))
         for row in trans:
@@ -62,6 +62,26 @@ class Board:
                 else:
                     board += f' {element} '
             board += '\n'
+        return board
+        """
+        result = ''
+        for row in self._display_matrix():
+            for cell in row:
+                result += f' {cell} '
+            result += '\n'
+        return result
+    
+    def _display_matrix(self) -> list[list[str]]:
+        transposed = reversed(transpose_matrix(self._columns))
+        board = []
+        for row in transposed:
+            display_row = []
+            for cell in row:
+                if cell is None:
+                    display_row.append('-')
+                else:
+                    display_row.append(cell)
+            board.append(display_row)
         return board
     
     def is_full(self) -> bool: 
@@ -74,8 +94,7 @@ class Board:
                 full = False
         return full
 
-
-        
+     
     # Juega una ficha en una columna 
     def play(self, player_char: str, col_number: int)-> None:
         """

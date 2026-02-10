@@ -109,4 +109,3 @@ def displace_lol(lol, filler):
     
   return displaced
 
-  
