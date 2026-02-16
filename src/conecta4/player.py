@@ -1,5 +1,6 @@
 from conecta4.oracle import BaseOracle, ColumnClassification, ColumnRecommendation
 from conecta4.board import Board
+import random
 
 
 class Player:
@@ -57,10 +58,11 @@ class Player:
         for r in recommendations:
             if r.classification != ColumnClassification.FULL:
                 valid_recommendations.append(r)
-        
-        return valid_recommendations[0]
-        
+
         #seleccionamos entre las iguales, una al azar
+        return random.choice(valid_recommendations)
+        
+        
     
 class HumanPlayer(Player):
     
