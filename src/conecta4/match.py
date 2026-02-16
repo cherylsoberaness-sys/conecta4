@@ -29,11 +29,11 @@ class Match:
         """
         Devuelve el jugador ganador y si no lo hay, devuelve none
         """
-
+        winner = None
         if board.is_victory('x'):
-            return self.get_player('x')
+            winner = self.get_player('x')
         elif board.is_victory('o'):
-            return self.get_player('o')
-        else:
-            return None
+            winner = self.get_player('o')
+        
+        return winner 
         

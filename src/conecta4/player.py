@@ -30,7 +30,7 @@ class Player:
         (best, recommendations) = self._ask_oracle(board)
 
         #juego en la mejor
-        self._play_on(board, best)
+        self._play_on(board, best._index)
 
     def _play_on(self, board: Board, position):
         #juega en la pos
@@ -50,15 +50,17 @@ class Player:
 
         return (best, recommendations)
 
-    def _choose(self, recommendations: list[ColumnRecommendation]) -> int:
+    def _choose(self, recommendations: list[ColumnRecommendation]) -> list[ColumnRecommendation]:
         #selecciona la mejor opción de la lista
         #de recomendaciones
-       
+        valid_recommendations = []
         for r in recommendations:
             if r.classification != ColumnClassification.FULL:
-                return r._index
+                valid_recommendations.append(r)
         
-        raise ValueError("No hay columnas disponibles")
+        return valid_recommendations[0]
+        
+        #seleccionamos entre las iguales, una al azar
     
 class HumanPlayer(Player):
     

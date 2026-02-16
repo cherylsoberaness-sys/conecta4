@@ -1,5 +1,5 @@
 from conecta4.board import Board
-
+"""
 if __name__ == "__main__":
 
    #victoria vertical
@@ -14,14 +14,14 @@ if __name__ == "__main__":
    #print("Columnas:")
    #for i, col in enumerate(b._columns):
    #  print(i, col)
-   """"
+   
    print("Tablero interno (_columns):")
    for i, col in enumerate(b._columns):
       print(i, col)
 
    print("is_victory('x'):", b._has_vertical_victory("x", b._columns))
    print("is_victory('o'):", b._has_vertical_victory("o", b._columns))
-   """
+   
    assert b.is_victory("o") == False
    print(b.is_victory("x"))
 
@@ -87,3 +87,5 @@ if __name__ == "__main__":
    print(b3.is_victory("x"))
    print("is_victory('x'):", b3._has_descending_victory("x", b3._columns))
    print(b3)
+
+"""
