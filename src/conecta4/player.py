@@ -78,7 +78,7 @@ class HumanPlayer(Player):
             if _is_int(raw) and _is_within_column_range(board, int(raw)) and _is_non_full_column(board, int(raw)):
                 #si no lo es, jugamos donde ha dicho y salimos del bucle
                 pos = raw
-                return (pos, None)
+                return (ColumnRecommendation(pos, None), None)
             
 
 # Funciones de validacion de indice de columna
