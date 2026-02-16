@@ -109,3 +109,11 @@ def displace_lol(lol, filler):
     
   return displaced
 
+def all_same(elements):
+  same = True
+  for i in range(len(elements) - 1):
+    if elements[i] != elements[i + 1]:
+      same = False
+      break
+
+  return same

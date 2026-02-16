@@ -1,6 +1,7 @@
 from conecta4.oracle import BaseOracle, ColumnClassification, ColumnRecommendation
 from conecta4.board import Board
 import random
+from conecta4.list_utils import all_same
 
 
 class Player:
@@ -51,16 +52,23 @@ class Player:
 
         return (best, recommendations)
 
-    def _choose(self, recommendations: list[ColumnRecommendation]) -> list[ColumnRecommendation]:
-        #selecciona la mejor opción de la lista
-        #de recomendaciones
-        valid_recommendations = []
+    def _choose(self, recommendations: list[ColumnRecommendation]) -> ColumnRecommendation:
+        #quitamos las no validas
+        valid_recommendations: list[ColumnRecommendation] = []
         for r in recommendations:
             if r.classification != ColumnClassification.FULL:
                 valid_recommendations.append(r)
+        #ordenamos por el valor de vlasificacion
+        valid_recommendations = sorted(valid_recommendations, key= lambda x: x.classification.value, reverse=True)        
+        #si son todas iguales, pillo una el azar
+        if all_same(valid_recommendations):
+            return random.choice(valid_recommendations)
+        # si no lo son, pillo la mas deseable(que sera la primera)
+        else:
+            #seleccionamos entre ellas la mejor (que sera la primera)
+            return valid_recommendations[0]
+    
 
-        #seleccionamos entre las iguales, una al azar
-        return random.choice(valid_recommendations)
         
         
     

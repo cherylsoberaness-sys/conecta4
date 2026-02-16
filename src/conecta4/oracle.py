@@ -10,11 +10,13 @@ if TYPE_CHECKING:
 
 #Clases de columna
 class ColumnClassification(Enum):
-    FULL = auto()   # Imposible
-    LOSE = auto()   # Derrota inminente
-    BAD  = auto()   # Muy indeseable
-    MAYBE = auto()  # Indeseable (no se muy bien que va a pasar, mejor no arriesgar)
-    WIN  = auto()   # Victoria inmediata
+    FULL = -1 #auto()   # Imposible
+    MAYBE = 1 #indeseable (no se muy bien que va a pasar, mejor no arriesgar)
+    WIN  = 100 #auto()   # Victoria inmediata
+    #BAD  = auto()   # Muy indeseable
+    #LOSE = 1 #auto()   # Derrota inminente
+    
+    
 
 #Recomendación de una columna: indice + clase
 class ColumnRecommendation: 
