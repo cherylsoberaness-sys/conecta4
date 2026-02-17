@@ -67,7 +67,7 @@ class Player:
         else:
             #seleccionamos entre ellas la mejor (que sera la primera)
             return valid_recommendations[0]
-    
+     
 
         
         

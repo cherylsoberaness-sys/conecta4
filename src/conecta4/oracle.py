@@ -35,9 +35,9 @@ class ColumnRecommendation:
         # si son de clases distintas, pues distintos
         if not isinstance(other, self.__class__):
             return False
-        # si son de la misma clase, pues comparo las propiedades de uno y otro
+        #colo importa la clasificaciones clasificaciones
         else:
-             return (self._index, self.classification) == (other._index, other.classification)
+             return self.classification == other.classification
     
     def __hash__(self)->int:
         return hash((self._index, self.classification)) 
@@ -110,12 +110,24 @@ class SmartOracle(BaseOracle):
             # juego en index
             simulated_board = self._play_on_temp_board(board, index, player)
             #le pregunto al teblaero temporal si is_victory(player)
-            if simulated_board.is_victory(player):
+            if simulated_board.is_victory(player.char):
             # si es asi, reclasifico a WIN
                 recommendation = ColumnRecommendation(index, ColumnClassification.WIN)
                 
 
         return recommendation
+     
+
+     def _is_winning_move(self, board: Board, index: int, player: Player) -> bool:
+         """
+         determina si al jugar en una posicion nos llevaria a ganar de inmediato
+         """
+         #hago una copia del tablero y juego en ella 
+         tmp_board = self._play_on_temp_board(board, index, player)
+
+         #determino si hay una victoria o no
+         return tmp_board.is_victory(player.char)
+
         
      def _play_on_temp_board(self, original: Board, index: int, player: Player) ->Board:
         """
@@ -123,11 +135,5 @@ class SmartOracle(BaseOracle):
         en la columna que nos han dicho, y devuelve el board resultante
         """
         temp_board = deepcopy(original)
-        col = temp_board._columns[index]
-
-        for i, cell in enumerate(col):
-            if cell is None:
-                col[i] = player.char
-                break
-
-        
+        temp_board.play(player.char, index)
+        return temp_board

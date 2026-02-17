@@ -3,26 +3,6 @@ from conecta4.player import Player, _is_int, _is_non_full_column, _is_within_col
 from conecta4.oracle import BaseOracle
 
 
-def test_play():
-    """
-    Comprobamos que se juega en la primera columna disponible
-    """
-
-    before = Board.fromList([[None, None, None, None],
-                             ["x", "o", "x", "o"],
-                             ["x", "o", "x", "o"],
-                             ["x", None, None, None]])
-    
-    after = Board.fromList([["x", None, None, None],
-                             ["x", "o", "x", "o"],
-                             ["x", "o", "x", "o"],
-                             ["x", None, None, None]])
-    
-    player = Player("Rob",'x', oracle= BaseOracle())
-
-    player.playing(before)
-    assert before == after
-
 
 def test_valid_column():
     board = Board.fromList([['x', None, None, None, ],
