@@ -3,6 +3,7 @@ from conecta4.board import Board
 from conecta4.settings import BOARD_COLUMNS, BOARD_ROWS
 from typing import TYPE_CHECKING
 from copy import deepcopy
+from conecta4.player import Player
 
 if TYPE_CHECKING:
     from conecta4.player import Player
@@ -10,14 +11,13 @@ if TYPE_CHECKING:
 
 #Clases de columna
 class ColumnClassification(Enum):
-    FULL = -1 #auto()   # Imposible
-    MAYBE = 1 #indeseable (no se muy bien que va a pasar, mejor no arriesgar)
+    FULL = -1  # Imposible
+    LOSE = 1 # Derrota inminente
+    MAYBE = 10 #indeseable (no se muy bien que va a pasar, mejor no arriesgar)
     WIN  = 100 #auto()   # Victoria inmediata
-    #BAD  = auto()   # Muy indeseable
-    #LOSE = 1 #auto()   # Derrota inminente
+ 
+  
     
-    
-
 #Recomendación de una columna: indice + clase
 class ColumnRecommendation: 
     """
@@ -35,7 +35,7 @@ class ColumnRecommendation:
         # si son de clases distintas, pues distintos
         if not isinstance(other, self.__class__):
             return False
-        #colo importa la clasificaciones clasificaciones
+        #solo importa las clasificaciones
         else:
              return self.classification == other.classification
     
@@ -78,10 +78,6 @@ class BaseOracle:
             return result
         
 
-            
-
-
-
 class SmartOracle(BaseOracle):
      
      """
@@ -108,14 +104,37 @@ class SmartOracle(BaseOracle):
             #se puede mejorar:
             # creo un tablero temporal a partir de board
             # juego en index
-            simulated_board = self._play_on_temp_board(board, index, player)
+            
             #le pregunto al teblaero temporal si is_victory(player)
-            if simulated_board.is_victory(player.char):
+            if self._is_winning_move(board, index, player):
             # si es asi, reclasifico a WIN
-                recommendation = ColumnRecommendation(index, ColumnClassification.WIN)
+                recommendation.classification = ColumnClassification.WIN
+            elif self._is_losing_move(board, index, player):
+            #si no hay win habra derrota?    
+                recommendation.classification = ColumnClassification.LOSE
                 
-
+        #la columna junto con la clasificacion que recibimos de super se convierte en lugar de MAYBE a WIN o LOSE
+        #Dependiendo del caso, o se queda como maybe cuando realmente aplique
         return recommendation
+     
+       
+     def _is_losing_move(self, board: Board, index: int, player: Player) -> bool:
+         """"
+          Si juego en el index, se genera una jugada vencedora
+          para el oponente en alguna de las demas columnas?
+         """
+         #jugar antes para no clasificar erroneamente la columna a LOSE
+         #y poder bloquear la jugada del oponente en caso posible, de lo
+         #contrario la derrota es inminente.
+         tmp_board = self._play_on_temp_board(board, index, player)
+         will_lose = False
+         for i in range(0, BOARD_COLUMNS):
+             if self._is_winning_move(tmp_board, i, player.opponent): 
+                 will_lose = True
+                 break
+        
+         return will_lose 
+                 
      
 
      def _is_winning_move(self, board: Board, index: int, player: Player) -> bool:
@@ -127,6 +146,8 @@ class SmartOracle(BaseOracle):
 
          #determino si hay una victoria o no
          return tmp_board.is_victory(player.char)
+     
+
 
         
      def _play_on_temp_board(self, original: Board, index: int, player: Player) ->Board:
@@ -137,3 +158,6 @@ class SmartOracle(BaseOracle):
         temp_board = deepcopy(original)
         temp_board.play(player.char, index)
         return temp_board
+
+
+
