@@ -3,7 +3,7 @@ from conecta4.board import Board
 from conecta4.settings import BOARD_COLUMNS, BOARD_ROWS
 from typing import TYPE_CHECKING
 from copy import deepcopy
-from conecta4.player import Player
+
 
 if TYPE_CHECKING:
     from conecta4.player import Player
@@ -14,10 +14,10 @@ class ColumnClassification(Enum):
     FULL = -1  # Imposible
     LOSE = 1 # Derrota inminente
     MAYBE = 10 #indeseable (no se muy bien que va a pasar, mejor no arriesgar)
-    WIN  = 100 #auto()   # Victoria inmediata
- 
-  
-    
+    WIN  = 100 # Victoria inmediata
+
+
+
 #Recomendación de una columna: indice + clase
 class ColumnRecommendation: 
     """
@@ -37,120 +37,118 @@ class ColumnRecommendation:
             return False
         #solo importa las clasificaciones
         else:
-             return self.classification == other.classification
-    
+            return self.classification == other.classification
+
     def __hash__(self)->int:
         return hash((self._index, self.classification)) 
-        
+    
 
-# Oráculos, de más tonto a más listo
-
-#Los oráculos, deben de realizar un trabajo complejo: clasificar columnas
-#en el caso más complejo, teniendo en cuenta errores del pasado.
-#Usamos divide y vencerás, y cada oráculo, del más tonto al más listo
-#se encargará de una parte.
 class BaseOracle:
+    """
+    La clase base y el oráculo más tonto: clasifica las columnas en llenas
+    y no llenas.
+    """
+
+    def get_recommendation(self, board: Board, player: Player )->list[ColumnRecommendation]:
+        recomendations = []
+        for i in range(BOARD_COLUMNS):
+            recomendations.append(self._get_column_recommendation(board, i, player))
+        return recomendations
+    
+
+    def _get_column_recommendation(self, board: Board, index: int, player: Player)->ColumnRecommendation:
         """
-        La clase base y el oráculo más tonto: clasifica las columnas en llenas
-        y no llenas.
+        Método privado, que determina si una columna está llena, en cuyo caso la clasifica
+        como FULL, para todo lo demás, MAYBE
         """
 
-        def get_recommendation(self, board: Board, player: Player )->list[ColumnRecommendation]:
-            recomendations = []
-            for i in range(BOARD_COLUMNS):
-                recomendations.append(self._get_column_recommendation(board, i, player))
-            return recomendations
-        
+        result = ColumnRecommendation(index, ColumnClassification.MAYBE)
 
-        def _get_column_recommendation(self, board: Board, index: int, player: Player)->ColumnRecommendation:
-            """
-            Método privado, que determina si una columna está llena, en cuyo caso la clasifica
-            como FULL, para todo lo demás, MAYBE
-            """
+        # compruebo si me he equivocado, y si es asi, cambio el valor de result
+        last_element = BOARD_ROWS - 1 #len(board._columns[index]) -1
+        if board._columns[index][last_element] != None:
+            result = ColumnRecommendation(index, ColumnClassification.FULL)
 
-            result = ColumnRecommendation(index, ColumnClassification.MAYBE)
-
-            # compruebo si me he equivocado, y si es asi, cambio el valor de result
-            last_element = BOARD_ROWS - 1 #len(board._columns[index]) -1
-            if board._columns[index][last_element] != None:
-                result = ColumnRecommendation(index, ColumnClassification.FULL)
-
-            return result
-        
+        return result
+    
 
 class SmartOracle(BaseOracle):
-     
-     """
-     Refina la recomendacion del oraculo base, intentando afinar la
-     clasificacion MAYBE a algo mas preciso. En concreto a WIN: va a determinar
-     que jugadas nos llevan a ganar de inmediato.
-     """
+    
+    """
+    Refina la recomendacion del oraculo base, intentando afinar la
+    clasificacion MAYBE a algo mas preciso. En concreto a WIN: va a determinar
+    que jugadas nos llevan a ganar de inmediato.
+    """
 
-     def _get_column_recommendation(self,
-                                   board: Board,
-                                   index: int,
-                                   player: Player) -> ColumnRecommendation:
-         
-     
+    def _get_column_recommendation(self,
+                                board: Board,
+                                index: int,
+                                player: Player) -> ColumnRecommendation:
+        
+    
         """
         Afina las recomendaciones. Las que hayan salido como MAYBE.
         iNTENTO ver si hay algo mas preciso, en concreto una victoria
         para player.
         """
+    
         #pido la clasificacion básica
         recommendation = super()._get_column_recommendation(board, index, player)
         # Afino los maybe: juego como player en esa columna y compruebo si eso me da una victoria
         if recommendation.classification == ColumnClassification.MAYBE:
             #se puede mejorar:
             # creo un tablero temporal a partir de board
-            # juego en index
-            
+            #juego en index
+        
             #le pregunto al teblaero temporal si is_victory(player)
             if self._is_winning_move(board, index, player):
-            # si es asi, reclasifico a WIN
+                # si es asi, reclasifico a WIN
                 recommendation.classification = ColumnClassification.WIN
             elif self._is_losing_move(board, index, player):
-            #si no hay win habra derrota?    
+                #si no hay win habra derrota?    
                 recommendation.classification = ColumnClassification.LOSE
-                
+            
         #la columna junto con la clasificacion que recibimos de super se convierte en lugar de MAYBE a WIN o LOSE
         #Dependiendo del caso, o se queda como maybe cuando realmente aplique
         return recommendation
-     
-       
-     def _is_losing_move(self, board: Board, index: int, player: Player) -> bool:
-         """"
-          Si juego en el index, se genera una jugada vencedora
-          para el oponente en alguna de las demas columnas?
-         """
-         #jugar antes para no clasificar erroneamente la columna a LOSE
-         #y poder bloquear la jugada del oponente en caso posible, de lo
-         #contrario la derrota es inminente.
-         tmp_board = self._play_on_temp_board(board, index, player)
-         will_lose = False
-         for i in range(0, BOARD_COLUMNS):
-             if self._is_winning_move(tmp_board, i, player.opponent): 
-                 will_lose = True
-                 break
-        
-         return will_lose 
-                 
-     
+    
+    
+    def _is_losing_move(self, board: Board, index: int, player: Player) -> bool:
+        """"
+        Si juego en el index, se genera una jugada vencedora
+        para el oponente en alguna de las demas columnas?
+        """
+        #jugar antes para no clasificar erroneamente la columna a LOSE
+        #y poder bloquear la jugada del oponente en caso posible, de lo
+        #contrario la derrota es inminente.
+        tmp_board = self._play_on_temp_board(board, index, player)
+        will_lose = False
+        for i in range(0, BOARD_COLUMNS):
+            if self._is_winning_move(tmp_board, i, player.opponent): 
+                will_lose = True
+                break
+    
+        return will_lose 
+                
+    
 
-     def _is_winning_move(self, board: Board, index: int, player: Player) -> bool:
-         """
-         determina si al jugar en una posicion nos llevaria a ganar de inmediato
-         """
-         #hago una copia del tablero y juego en ella 
-         tmp_board = self._play_on_temp_board(board, index, player)
+    def _is_winning_move(self, board: Board, index: int, player: Player) -> bool:
+        """
+        determina si al jugar en una posicion nos llevaria a ganar de inmediato
+        """
+        #hago una copia del tablero y juego en ella 
+        last_element = BOARD_ROWS - 1
+        if board._columns[index][last_element] != None:
+            return False
+        tmp_board = self._play_on_temp_board(board, index, player)
 
-         #determino si hay una victoria o no
-         return tmp_board.is_victory(player.char)
-     
+        #determino si hay una victoria o no
+        return tmp_board.is_victory(player.char)
+    
 
 
-        
-     def _play_on_temp_board(self, original: Board, index: int, player: Player) ->Board:
+    
+    def _play_on_temp_board(self, original: Board, index: int, player: Player) ->Board:
         """
         Crea una copia (profunda) del board original juega en nombre de player
         en la columna que nos han dicho, y devuelve el board resultante

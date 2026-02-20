@@ -1,4 +1,4 @@
-from conecta4.player import Player, HumanPlayer
+from conecta4.player import Player
 from conecta4.board import Board
 
 class Match:
