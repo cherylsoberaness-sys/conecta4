@@ -52,3 +52,5 @@ def test_is_winning_move():
         assert oracle._is_winning_move(almost, i, loser) == False
     
     assert oracle._is_winning_move(almost, 2, winner)
+
+

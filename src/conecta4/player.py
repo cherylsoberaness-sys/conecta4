@@ -1,7 +1,9 @@
-from conecta4.oracle import BaseOracle, ColumnClassification, ColumnRecommendation
+from conecta4.oracle import BaseOracle, ColumnClassification, ColumnRecommendation, SmartOracle
 from conecta4.board import Board
 import random
 from conecta4.list_utils import all_same
+from beautifultable import BeautifulTable
+from conecta4.settings import BOARD_COLUMNS
 
 
 class Player:
@@ -12,6 +14,7 @@ class Player:
         self.name: str = name
         self.char = char
         self._oracle = oracle
+        self._opponent = None
         self.opponent = opponent
         self.last_move = None
 
@@ -74,8 +77,8 @@ class Player:
     
 class HumanPlayer(Player):
     
-    def __init__(self, name, char=None):
-        super().__init__(name, char)
+    def __init__(self, name, char=None, opponent=None, oracle=None):
+        super().__init__(name, char, opponent, oracle)
 
     def _ask_oracle(self, board):
         """
@@ -83,13 +86,30 @@ class HumanPlayer(Player):
         """
         while True:
             #pedimos columna al humano
-            raw = int(input("Select a column, punny human: "))
+            raw = input("Select a column, punny human (or h for help): ")
+            if raw.lower() == "h":
+                #mostramos con beautiful table la clasificacion de las columnas
+                self._show_help(board)
+                continue
             #verificamos que su respuesta no sea una idiotez
             if _is_int(raw) and _is_within_column_range(board, int(raw)) and _is_non_full_column(board, int(raw)):
                 #si no lo es, jugamos donde ha dicho y salimos del bucle
-                pos = raw
+                pos = int(raw)
                 return (ColumnRecommendation(pos, None), None)
+
+    def _show_help(self, board: Board):
+        recommendations = self._oracle.get_recommendation(board, self)
+        bt = BeautifulTable()
+        classifications = []
+        for r in recommendations:
+            classifications.append(r.classification.name)
+        bt.rows.append(classifications)
+        bt.columns.header = [str(i) for i in range(BOARD_COLUMNS)]
+        print(bt)
             
+        
+
+           
 
 # Funciones de validacion de indice de columna
 def _is_within_column_range(game_board: Board, col_idx: int):
@@ -110,6 +130,8 @@ def _is_int(col: str):
         return False
             
 
+    
+    
 
 
            

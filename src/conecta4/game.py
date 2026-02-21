@@ -120,7 +120,7 @@ class Game:
         3) t-1000: Don't event think about it!
         """)
         while True:
-            response = input('lease type 1, 2 or 3: ').strip()
+            response = input('Please type 1, 2 or 3: ').strip()
             if response == "1":
                 level = DifficultyLevel.LOW
                 break
@@ -166,7 +166,7 @@ class Game:
         else:
             # ord vs humano
             player1 = Player('t-800', oracle=_levels[self._difficulty_level])
-            player2 = HumanPlayer(name= input('Enter your name, punny human: '))
+            player2 = HumanPlayer(name= input('Enter your name, punny human: '), oracle=SmartOracle())
         
 
         return Match(player1, player2)

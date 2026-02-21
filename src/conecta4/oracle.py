@@ -65,7 +65,7 @@ class BaseOracle:
         result = ColumnRecommendation(index, ColumnClassification.MAYBE)
 
         # compruebo si me he equivocado, y si es asi, cambio el valor de result
-        last_element = BOARD_ROWS - 1 #len(board._columns[index]) -1
+        last_element = len(board._columns[index]) -1
         if board._columns[index][last_element] != None:
             result = ColumnRecommendation(index, ColumnClassification.FULL)
 
@@ -121,8 +121,8 @@ class SmartOracle(BaseOracle):
         #jugar antes para no clasificar erroneamente la columna a LOSE
         #y poder bloquear la jugada del oponente en caso posible, de lo
         #contrario la derrota es inminente.
-        tmp_board = self._play_on_temp_board(board, index, player)
         will_lose = False
+        tmp_board = self._play_on_temp_board(board, index, player)
         for i in range(0, BOARD_COLUMNS):
             if self._is_winning_move(tmp_board, i, player.opponent): 
                 will_lose = True
@@ -137,7 +137,7 @@ class SmartOracle(BaseOracle):
         determina si al jugar en una posicion nos llevaria a ganar de inmediato
         """
         #hago una copia del tablero y juego en ella 
-        last_element = BOARD_ROWS - 1
+        last_element = len(board._columns[index]) -1
         if board._columns[index][last_element] != None:
             return False
         tmp_board = self._play_on_temp_board(board, index, player)
