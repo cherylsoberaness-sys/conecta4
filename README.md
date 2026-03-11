@@ -25,7 +25,7 @@ Human players can also **request help from the oracle** to see the classificatio
 
 - Console-based Connect Four gameplay
 - Computer vs Computer and Computer vs Human modes
-- Rule-based AI move evaluation using an oracle
+- Rule-based move evaluation using an oracle
 - Human players can request oracle recommendations during gameplay
 - Board visualization using `BeautifulTable`
 - ASCII game title using `PyFiglet`
@@ -36,7 +36,7 @@ Human players can also **request help from the oracle** to see the classificatio
 
 ## Oracle Decision System
 
-The AI uses an **oracle** to evaluate each column before making a move.
+In the game the computer as well as the human uses an **oracle** to evaluate each column before making a move.
 
 Instead of choosing randomly, the oracle simulates possible outcomes and classifies each column according to its consequences.
 
@@ -71,3 +71,4 @@ Possible improvements include:
 - Improving difficulty levels
 - Enhancing board visualization
 - Adding a graphical interface
+
