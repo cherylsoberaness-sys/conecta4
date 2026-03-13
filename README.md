@@ -8,14 +8,14 @@ This project focuses on practicing **object-oriented design**, **game state mana
 
 ## Overview
 
-Connect Four is a two-player game where players take turns dropping pieces into a vertical board. The goal is to connect **three pieces in a row** vertically, horizontally, or diagonally.
+Connect Four is a two player game where players take turns dropping pieces into a vertical board. The goal is to connect **three pieces in a row** vertically, horizontally, or diagonally.
 
 This implementation runs in the terminal and supports:
 
 - Computer vs Computer
 - Computer vs Human
 
-Computer players use an **oracle-based system** to analyze the board before choosing a move.
+Computer players use an **oracle based system** to analyze the board before choosing a move.
 
 Human players can also **request help from the oracle** to see the classification of each column before deciding where to play.
 
@@ -23,9 +23,9 @@ Human players can also **request help from the oracle** to see the classificatio
 
 ## Features
 
-- Console-based Connect Four gameplay
+- Console based Connect Four gameplay
 - Computer vs Computer and Computer vs Human modes
-- Rule-based move evaluation using an oracle
+- Rule based move evaluation using an oracle
 - Human players can request oracle recommendations during gameplay
 - Board visualization using `BeautifulTable`
 - ASCII game title using `PyFiglet`
@@ -58,8 +58,8 @@ This project was developed as a learning exercise to practice:
 - Separation of responsibilities
 - Game state management
 - Simulation of future game states
-- Rule-based decision systems
-- Automated testing with pytest
+- Rule based decision systems
+- Testing with pytest
 
 ---
 
