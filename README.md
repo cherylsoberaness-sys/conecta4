@@ -2,7 +2,7 @@
 
 A console-based implementation of the classic **Connect Four** game written in Python.
 
-This project focuses on practicing **object-oriented design**, **game state management**, and **rule-based move evaluation** using an oracle system.
+This project focuses on practicing **object oriented design**, **game state management**, and **rule based move evaluation** using an oracle system.
 
 ---
 
